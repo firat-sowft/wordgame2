@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - KELİME OYUNU</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+    <style>
+        .word-list {
+            margin: 20px 0;
+            max-height: 400px; /* Maksimum yükseklik */
+            overflow-y: auto; /* Dikey scroll bar */
+            border: 1px solid #ddd; /* İsteğe bağlı: görsel sınır */
+            border-radius: 5px; /* İsteğe bağlı: yuvarlatılmış köşeler */
+        }
+        /* Webkit (Chrome, Safari) için özel scrollbar stilleri */
+        .word-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .word-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .word-list::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        .word-list::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .word-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .word-info {
+            flex-grow: 1;
+        }
+        .action-buttons button {
+            margin-left: 10px;
+            padding: 5px 10px;
+        }
+        .add-word-form {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        .form-row {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>KELİME OYUNU <span>heyecanı bitir</span></h1>
+        <div class="user-info">
+            Hoşgeldiniz, Admin
+        </div>
+        
+        <div class="add-word-form">
+            <h3>Yeni Kelime Ekle</h3>
+            <div class="form-row">
+                <input type="text" id="newWord" placeholder="Kelime" required>
+            </div>
+            <div class="form-row">
+                <input type="text" id="newHint" placeholder="İpucu" required>
+            </div>
+            <div class="form-row">
+                <select id="wordLength">
+                    <option value="4">4 Harfli</option>
+                    <option value="5">5 Harfli</option>
+                    <option value="6">6 Harfli</option>
+                    <option value="7">7 Harfli</option>
+                    <option value="8">8 Harfli</option>
+                    <option value="9">9 Harfli</option>
+                    <option value="10">10 Harfli</option>
+                </select>
+            </div>
+            <button onclick="addWord()">Kelime Ekle</button>
+        </div>
+
+        <div class="word-list" id="wordList">
+            <!-- Kelimeler burada listelenecek -->
+        </div>
+
+        <button class="logout-btn" onclick="adminLogout()">Çıkış Yap</button>
+    </div>
+
+    <!-- Düzenleme Modal -->
+    <div id="editModal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+        <h3>Kelime Düzenle</h3>
+        <input type="hidden" id="editId">
+        <div class="form-row">
+            <input type="text" id="editWord" placeholder="Kelime">
+        </div>
+        <div class="form-row">
+            <input type="text" id="editHint" placeholder="İpucu">
+        </div>
+        <div class="form-row">
+            <button onclick="saveEdit()">Kaydet</button>
+            <button onclick="closeEditModal()">İptal</button>
+        </div>
+    </div>
+
+    <script>
+        // Admin sayfası için gerekli JavaScript kodları
+        let words = [];
+
+        async function loadWords() {
+            try {
+                const response = await fetch('http://localhost:5000/words');
+                const data = await response.json();
+                words = data;
+                displayWords();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function displayWords() {
+            const wordList = document.getElementById('wordList');
+            wordList.innerHTML = '';
+            
+            words.forEach(word => {
+                const div = document.createElement('div');
+                div.className = 'word-item';
+                div.innerHTML = `
+                    <div class="word-info">
+                        <strong>${word.word}</strong> (${word.word.length} harf) - ${word.hint}
+                    </div>
+                    <div class="action-buttons">
+                        <button onclick="editWord('${word._id}')">Düzenle</button>
+                        <button onclick="deleteWord('${word._id}')">Sil</button>
+                    </div>
+                `;
+                wordList.appendChild(div);
+            });
+        }
+
+        async function addWord() {
+            const word = document.getElementById('newWord').value.toUpperCase();
+            const hint = document.getElementById('newHint').value;
+            const length = document.getElementById('wordLength').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/words', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ word, hint, length: parseInt(length) })
+                });
+
+                if (response.ok) {
+                    loadWords();
+                    document.getElementById('newWord').value = '';
+                    document.getElementById('newHint').value = '';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function deleteWord(id) {
+            if (confirm('Bu kelimeyi silmek istediğinizden emin misiniz?')) {
+                try {
+                    const response = await fetch(`http://localhost:5000/words/${id}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        loadWords();
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+        }
+
+        function editWord(id) {
+            const word = words.find(w => w._id === id);
+            document.getElementById('editId').value = id;
+            document.getElementById('editWord').value = word.word;
+            document.getElementById('editHint').value = word.hint;
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        async function saveEdit() {
+            const id = document.getElementById('editId').value;
+            const word = document.getElementById('editWord').value.toUpperCase();
+            const hint = document.getElementById('editHint').value;
+
+            try {
+                const response = await fetch(`http://localhost:5000/words/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ word, hint })
+                });
+
+                if (response.ok) {
+                    closeEditModal();
+                    loadWords();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Çıkış fonksiyonunu ekleyelim
+        function adminLogout() {
+            window.location.href = 'index.html';
+        }
+
+        // Sayfa yüklendiğinde kelimeleri yükle
+        document.addEventListener('DOMContentLoaded', loadWords);
+    </script>
+</body>
+</html>

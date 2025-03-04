@@ -1,0 +1,137 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.container {
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.word-boxes {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.letter-box {
+    width: 60px;
+    height: 69px;
+    position: relative;
+    background: white;
+    margin: 2px 5px;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    border: none;
+    font-size: 2rem;
+    text-align: center;
+    text-transform: uppercase;
+    background-color: #f8f8f8;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.letter-box:focus {
+    outline: none;
+    background-color: #e8e8e8;
+}
+
+.hint-box {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#check-button {
+    display: none;
+}
+
+#result-message {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.level-info {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.timer, .score {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+#get-letter-btn {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 1rem 0;
+}
+
+#get-letter-btn:hover {
+    background-color: #1976D2;
+}
+
+#get-letter-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.challenge-btn {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.challenge-btn:hover {
+    background-color: #cc0000;
+}
+
+.challenge-btn:disabled {
+    background-color: #ffcccc;
+    cursor: not-allowed;
+} 

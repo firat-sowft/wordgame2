@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelime Tahmin Oyunu</title>
+    <link rel="stylesheet" href="../static/css/play.css">
+</head>
+<body>
+    <div class="container">
+        <div class="game-header">
+            <div class="timer">Kalan Süre: <span id="time">04:00</span></div>
+            <div class="score">Puan: <span id="score">0</span></div>
+        </div>
+        <h1>Kelime Tahmin Oyunu</h1>
+        <div class="game-area">
+            <div class="word-boxes">
+                <!-- Kutular JavaScript ile oluşturulacak -->
+            </div>
+            <div class="hint-box">
+                <p id="hint"></p>
+            </div>
+            <div class="button-group">
+                <button id="get-letter-btn">Harf Al</button>
+                <button id="challenge-btn" class="challenge-btn">30</button>
+            </div>
+            <p id="result-message"></p>
+        </div>
+    </div>
+    <script src="../static/js/play.js"></script>
+</body>
+</html> 

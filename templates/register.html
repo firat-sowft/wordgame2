@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hesap Oluştur - KELİME OYUNU</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <button class="back-btn" onclick="goBack()">&#8592; Geri</button>
+        <h1>KELİME OYUNU <span>heyecanı bitir</span></h1>
+        <form id="registerForm">
+            <div class="form-row">
+                <div class="form-group half">
+                    <label for="firstname">İsim</label>
+                    <input type="text" 
+                           id="firstname" 
+                           pattern="^[A-Za-zğüşıöçĞÜŞİÖÇ]+$" 
+                           required
+                           oninput="this.value = this.value.replace(/[^A-Za-zğüşıöçĞÜŞİÖÇ]/g, '')"
+                           title="Sadece harf kullanabilirsiniz">
+                </div>
+                <div class="form-group half">
+                    <label for="lastname">Soyad</label>
+                    <input type="text" 
+                           id="lastname" 
+                           pattern="^[A-Za-zğüşıöçĞÜŞİÖÇ]+$" 
+                           required
+                           oninput="this.value = this.value.replace(/[^A-Za-zğüşıöçĞÜŞİÖÇ]/g, '')"
+                           title="Sadece harf kullanabilirsiniz">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">E-posta</label>
+                <input type="email" id="email" required>
+                <button type="button" class="verify-btn">Doğrulama Kodu Gönder</button>
+            </div>
+            <div id="passwordFields" style="display: none;">
+                <div class="form-group">
+                    <label for="verificationCode">Doğrulama Kodu</label>
+                    <input type="text" id="verificationCode" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Şifre</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Şifreyi Tekrarla</label>
+                    <input type="password" id="confirmPassword" required>
+                </div>
+                <button type="submit" class="register-submit-btn">Hesap Oluştur</button>
+            </div>
+        </form>
+    </div>
+    <script src="../static/js/script.js"></script>
+</body>
+</html>
