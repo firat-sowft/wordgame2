@@ -15,32 +15,31 @@ app = Flask(__name__,
     template_folder='templates')
 CORS(app)
 
+# Çevre değişkenlerini güvende tut
+MONGODB_URI = os.getenv('MONGODB_URI')
+SENDER_EMAIL = os.getenv('SENDER_EMAIL')
+SENDER_PASSWORD = os.getenv('SENDER_PASSWORD')
+
+if not all([MONGODB_URI, SENDER_EMAIL, SENDER_PASSWORD]):
+    raise Exception("Gerekli çevre değişkenleri eksik!")
+
 # MongoDB bağlantısı
-MONGODB_URI = os.getenv('MONGODB_URI', "mongodb+srv://mhmmdgymn:suskun1200@cluster0.uquyz.mongodb.net/WordGame?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true")
 client = MongoClient(MONGODB_URI)
 db = client.WordGame
 play_collection = db.play
 words_collection = db.words
 
-# E-posta ayarları
-sender_email = os.getenv('SENDER_EMAIL', "kelimeoyunu.heyecnibastir@gmail.com")
-sender_password = os.getenv('SENDER_PASSWORD', "qnon exwe vodo ducp")
-
-verification_codes = {}  # Doğrulama kodlarını geçici olarak saklamak için
-
-def generate_verification_code():
-    return ''.join(random.choices(string.digits, k=6))
-
+# E-posta ayarları artık çevre değişkenlerinden geliyor
 def send_verification_email(to_email, code):
     msg = MIMEText(f'Doğrulama kodunuz: {code}')
     msg['Subject'] = 'Kelime Oyunu Doğrulama Kodu'
-    msg['From'] = sender_email
+    msg['From'] = SENDER_EMAIL
     msg['To'] = to_email
 
     try:
         with smtplib.SMTP('smtp.gmail.com', 587) as server:
             server.starttls()
-            server.login(sender_email, sender_password)
+            server.login(SENDER_EMAIL, SENDER_PASSWORD)
             server.send_message(msg)
         return True
     except Exception as e:
