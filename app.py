@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, render_template, send_from_directory
 from pymongo import MongoClient
 import smtplib
 from email.mime.text import MIMEText
@@ -9,7 +9,10 @@ from flask_cors import CORS
 import re
 from bson import ObjectId
 
-app = Flask(__name__)
+app = Flask(__name__, 
+    static_url_path='', 
+    static_folder='static',
+    template_folder='templates')
 CORS(app)
 
 # MongoDB bağlantısı
@@ -244,6 +247,21 @@ def delete_word(word_id):
     if result.deleted_count > 0:
         return json_response({'success': True})
     return json_response({'error': 'Kelime bulunamadı'}, 404)
+
+# Ana sayfa route'u ekle
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+# Diğer sayfa route'ları
+@app.route('/<path:path>.html')
+def serve_pages(path):
+    return render_template(f'{path}.html')
+
+# Static dosyaları serve et
+@app.route('/static/<path:path>')
+def serve_static(path):
+    return send_from_directory('static', path)
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
