@@ -237,7 +237,7 @@ def update_word(word_id):
         return json_response({'success': True})
     return json_response({'error': 'Kelime bulunamadı'}, 404)
 
-@app.route('/words/<word_id>', methods['DELETE'])
+@app.route('/words/<word_id>', methods=['DELETE'])
 def delete_word(word_id):
     result = words_collection.delete_one({'_id': ObjectId(word_id)})
     
