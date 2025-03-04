@@ -1,3 +1,8 @@
+// API URL'ini yapılandırma
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000'
+    : 'https://web-production-56461.up.railway.app';
+
 let wordsByLevel = {};
 let currentLevel = 4;
 let solvedWordsInCurrentLevel = 0;
@@ -16,7 +21,7 @@ let isChallengeModeActive = false;
 // Veritabanından kelimeleri yükle
 async function loadWordsFromDatabase() {
     try {
-        const response = await fetch('http://localhost:5000/words');
+        const response = await fetch(`${API_URL}/words`);
         const words = await response.json();
         
         // Kelimeleri uzunluklarına göre grupla

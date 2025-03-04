@@ -106,12 +106,17 @@
     </div>
 
     <script>
+        // API URL'ini yapılandırma
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:5000'
+            : 'https://web-production-56461.up.railway.app';
+
         // Admin sayfası için gerekli JavaScript kodları
         let words = [];
 
         async function loadWords() {
             try {
-                const response = await fetch('http://localhost:5000/words');
+                const response = await fetch(`${API_URL}/words`);
                 const data = await response.json();
                 words = data;
                 displayWords();
@@ -146,7 +151,7 @@
             const length = document.getElementById('wordLength').value;
 
             try {
-                const response = await fetch('http://localhost:5000/words', {
+                const response = await fetch(`${API_URL}/words`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -167,7 +172,7 @@
         async function deleteWord(id) {
             if (confirm('Bu kelimeyi silmek istediğinizden emin misiniz?')) {
                 try {
-                    const response = await fetch(`http://localhost:5000/words/${id}`, {
+                    const response = await fetch(`${API_URL}/words/${id}`, {
                         method: 'DELETE'
                     });
 
@@ -194,7 +199,7 @@
             const hint = document.getElementById('editHint').value;
 
             try {
-                const response = await fetch(`http://localhost:5000/words/${id}`, {
+                const response = await fetch(`${API_URL}/words/${id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

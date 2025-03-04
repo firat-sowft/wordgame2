@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // API URL'ini yapılandırma
     const API_URL = window.location.hostname === 'localhost' 
         ? 'http://localhost:5000'
-        : 'https://your-railway-app-url.railway.app';
+        : 'https://web-production-56461.up.railway.app';
 
     // Login form handler
     loginForm?.addEventListener('submit', async function(e) {
